@@ -8,6 +8,8 @@ from yaml import Loader
 
 def TimeFunction(seconds):
     time.sleep(seconds)
+    
+lock = Lock()
 
 def entry_log(k):
     with open("Milestone2A_log.txt", 'a') as write_log:
@@ -43,21 +45,26 @@ def find_task(txt,data):
         elif execution == 'Concurrent':
             thread_items = []
             for k, v in activities.items():
-                # if 'Condition' in v:
-                #     cond = v['Condition'].split(' ')
-                #     key = cond[0]
-                #     val = cond[2]
-                #     if not key in dict:
-                #         continue
-                #     v1 = int(dict[key])
-                #     v2 = int(val)
-                #     print(v1, v2)
-                #     if int(dict[key]) >= int(val):
-                #         entry_log(txt + " Skipped")
-                #         continue
-                #     elif cond[1] == '>' and int(dict[key]) <= int(val):
-                #         entry_log(txt + " Skipped")
-                #         continue
+                if 'Condition' in v:
+                    cond = v['Condition'].split(' ')
+                    key = cond[0]
+                    val = cond[2]
+                    print(dict[key], val)
+                    # if not key in dict:
+                    #     continue
+                    v1 = int(dict[key])
+                    v2 = int(val)
+                    # print(v1, v2)
+                    if cond[1] == '<' and v1 >= v2:
+                        entry_log(txt + "." + k + " Entry")
+                        entry_log(txt + "." + k + " Skipped")
+                        entry_log(txt + "." + k + " Exit")
+                        continue
+                    elif cond[1] == '>' and v1 <= v2:
+                        entry_log(txt + "." + k + " Entry")
+                        entry_log(txt + "." + k + " Skipped")
+                        entry_log(txt + "." + k + " Exit")
+                        continue
                 find_task(txt + "." + k ,v)
             #     t = Thread(target=find_task, args=(txt + "." + k ,v,))
             #     thread_items.append(t)
@@ -71,10 +78,10 @@ def find_task(txt,data):
         if func == "TimeFunction":
             finput = data['Inputs']['FunctionInput']
             ftime = data['Inputs']['ExecutionTime']
-            if "Condition" in data:
+            if finput in dict:
                 cond = data['Condition'].split(' ')
                 key = cond[0]
-                entry_log(txt + " Executing " + str(func) + " (" + str(dict[key]) + ", " + str(ftime) + ")")
+                entry_log(txt + " Executing " + str(func) + " (" + str(dict[finput]) + ", " + str(ftime) + ")")
             else:
                 entry_log(txt + " Executing " + str(func) + " (" + str(finput) + ", " + str(ftime) + ")")
             TimeFunction(int(ftime))
@@ -89,6 +96,7 @@ def find_task(txt,data):
                     nofdefect += 1
                 keyn = "$(" + txt + ".NoOfDefects" + ")"
                 dict[keyn] = nofdefect
+                print(keyn, nofdefect)
         tasks.append(data)
     entry_log(txt + " Exit")
 
