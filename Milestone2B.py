@@ -12,7 +12,7 @@ def TimeFunction(seconds):
 lock = Lock()
 
 def entry_log(k):
-    with open("Milestone2A_log.txt", 'a') as write_log:
+    with open("Milestone2B_log.txt", 'a') as write_log:
         t = datetime.datetime.now()
         write_log.write(str(t) + ";" + str(k))
         write_log.write('\n')
@@ -24,12 +24,12 @@ def load_data(path):
         data = yaml.load(file_read, Loader=Loader)
         return data
     
-file = "DataSet/Milestone2/Milestone2A.yaml"
+file = "DataSet/Milestone2/Milestone2B.yaml"
 
 data = load_data(file)
-data = data['M2A_Workflow']
+data = data['M2B_Workflow']
 
-txt = "M2A_Workflow"
+txt = "M2B_Workflow"
 
 tasks = []
 dict = {}
@@ -70,7 +70,6 @@ def find_task(txt,data):
                 thread_items.append(t)
             for t in thread_items:
                 t.start()
-                time.sleep(1)
             for t in thread_items:
                 t.join()
     elif data['Type'] == 'Task':
