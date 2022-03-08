@@ -7,7 +7,7 @@ from yaml import Loader
 def entry_log(k):
     with open("Milestone1A_log.txt", 'a') as write_log:
         t = datetime.datetime.now()
-        write_log.write(str(t) + " " + str(k))
+        write_log.write(str(t) + ";" + str(k))
         write_log.write('\n')
         write_log.close()
         
@@ -47,12 +47,13 @@ def find_task(txt,data):
         func = data['Function']
         finput = data['Inputs']['FunctionInput']
         ftime = data['Inputs']['ExecutionTime']
-        entry_log(txt + " Executing " + str(func) + " (" + str(finput) + str(ftime) + " ) ")
+        print(ftime)
+        entry_log(txt + " Executing " + str(func) + " (" + str(finput) + ", " + str(ftime) + ")")
         tasks.append(data)
     entry_log(txt + " Exit")
 
 find_task(txt, data)
 
-print(tasks)
+# print(tasks)
         
         
