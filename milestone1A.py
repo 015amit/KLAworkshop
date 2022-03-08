@@ -2,7 +2,11 @@ from importlib.abc import Loader
 import yaml
 from threading import *
 import datetime
+import time
 from yaml import Loader
+
+def TimeFunction(seconds):
+    time.sleep(seconds)
 
 def entry_log(k):
     with open("Milestone1A_log.txt", 'a') as write_log:
@@ -47,8 +51,9 @@ def find_task(txt,data):
         func = data['Function']
         finput = data['Inputs']['FunctionInput']
         ftime = data['Inputs']['ExecutionTime']
-        print(ftime)
         entry_log(txt + " Executing " + str(func) + " (" + str(finput) + ", " + str(ftime) + ")")
+        if func == "TimeFunction":
+            TimeFunction(int(ftime))
         tasks.append(data)
     entry_log(txt + " Exit")
 

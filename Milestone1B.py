@@ -1,8 +1,13 @@
+from concurrent.futures import thread
 from importlib.abc import Loader
 import yaml
-from threading import *
+import threading
 import datetime
-from yaml import Loader
+import time
+# from yaml import Loader
+
+# def TimeFunction(seconds):
+#     time.sleep(seconds)
 
 def entry_log(k):
     with open("Milestone1B_log.txt", 'a') as write_log:
@@ -23,7 +28,7 @@ data = load_data(file)
 data = data['M1B_Workflow']
 
 txt = "M1B_Workflow"
-
+lock = threading.Lock()
 tasks = []
 
 def find_task(txt,data):
@@ -37,7 +42,7 @@ def find_task(txt,data):
         elif execution == 'Concurrent':
             threads_items = []
             for k, v in activities.items():
-                t = Thread(target=find_task, args=(txt + "." + k ,v,))
+                t = threading.Thread(target=find_task, args=(txt + "." + k ,v,))
                 threads_items.append(t)
             for t in threads_items:
                 t.start()
@@ -45,12 +50,14 @@ def find_task(txt,data):
                 t.join()
         entry_log(txt +  " Exit ")
     elif data['Type'] == 'Task':
-        func_name = data['Function']
-        func_input = data['Inputs']['FunctionInput']
-        exe_time = data['Inputs']['ExecutionTime']
-        entry_log(txt + " Executing " + str(func_name) + " ("+ str(func_input)+ ", "+str(exe_time)+ ")")
+        fname = data['Function']
+        finput = data['Inputs']['FunctionInput']
+        ftime = data['Inputs']['ExecutionTime']
+        entry_log(txt + " Executing " + str(fname) + " ("+ str(finput)+ ", "+str(ftime)+ ")")
+        time.sleep(int(ftime))
         entry_log(txt +  " Exit ")
-        tasks.append(data)
+    
+        # tasks.append(data)
     
 
 find_task(txt, data)
