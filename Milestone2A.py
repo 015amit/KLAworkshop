@@ -66,13 +66,20 @@ def find_task(txt,data):
                         entry_log(txt + "." + k + " Exit")
                         continue
                 # find_task(txt + "." + k ,v)
-                t = Thread(target=find_task, args=(txt + "." + k ,v,))
+                t = {}
+                t['thr'] = Thread(target=find_task, args=(txt + "." + k ,v,))
+                t['op'] = v
                 thread_items.append(t)
             for t in thread_items:
-                t.start()
+                # if 'Condition' in t['op']:
+                #     cond = t['op']['Condition'].split(' ')
+                #     key = cond[0]
+                #     if not key in dict:
+                #         time.sleep(1)
+                t['thr'].start()
                 time.sleep(1)
             for t in thread_items:
-                t.join()
+                t['thr'].join()
     elif data['Type'] == 'Task':
         func = data['Function']
         
